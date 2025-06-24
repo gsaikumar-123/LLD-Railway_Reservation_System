@@ -53,3 +53,31 @@ public:
     }
 };
 
+class Coach {
+public:
+    unordered_map<int, Berth> berths;
+    unordered_map<string, set<int>> typeMap;
+    queue<Ticket> RAC, WL;
+    vector<Ticket> confirmedTickets;
+    map<int, vector<Ticket>> allTickets;
+    int RAC_LIMIT = 4;
+    int WL_LIMIT = 2;
+    int nextPNR = 1000;
+
+    Coach() {
+        typeMap["LB"] = {1, 4, 9, 12};
+        typeMap["MB"] = {2, 5, 10, 13};
+        typeMap["UB"] = {3, 6, 11, 14};
+        typeMap["SU"] = {8, 16};
+
+        for (auto &pair : typeMap) {
+            for (int seat : pair.second) {
+                berths[seat] = Berth(seat, pair.first);
+            }
+        }
+        for (int i = 1; i <= 4; ++i) {
+            berths[100 + i] = Berth(-1, "RAC" + to_string(i));
+        }
+    }
+};
+
