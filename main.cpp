@@ -279,3 +279,50 @@ public:
 	}
 };
 
+int main() {
+    Coach coach;
+    while (true) {
+        cout << "1.Print all Berths\n2. Book Ticket\n3. Cancel Ticket\n4. Search by PNR\n5. Print All Tickets\n6. Exit\nEnter choice: ";
+        int ch; cin >> ch;
+        if(ch == 1){
+        	coach.printAllBerths();
+		}
+        else if (ch == 2) {
+            int groupSize;
+			cout << "Enter number of passengers: ";
+			cin >> groupSize;
+			
+			vector<Passenger> group;
+			for (int i = 0; i < groupSize; ++i) {
+			    string name, pref;
+			    int age;
+			    cout << "\nPassenger " << i + 1 << ":\n";
+			    cout << "Name: ";
+			    cin.ignore();
+			    getline(cin, name);
+			    cout << "Age: ";
+			    cin >> age;
+			    cout << "Berth Preference (LB/MB/UB/SU or 'null'): ";
+			    cin >> pref;
+			
+			    group.push_back(Passenger(name, age, pref));
+			}
+			coach.bookTicket(group);
+        } 
+        
+		else if (ch == 3) {
+            int pnr; cout << "Enter PNR to cancel: "; cin >> pnr;
+            coach.cancelTicket(pnr);
+        } 
+		else if (ch == 4) {
+            int pnr; cout << "Enter PNR to search: "; cin >> pnr;
+            coach.searchByPNR(pnr);
+        }
+		else if (ch == 5) {
+            coach.printAllTickets();
+        }
+		else break;
+    }
+    return 0;
+}
+
