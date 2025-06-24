@@ -260,5 +260,22 @@ public:
 	    }
 	}
 
+    void searchByPNR(int pnr) {
+	    if (allTickets.find(pnr) != allTickets.end()) {
+	        cout << "Tickets under PNR " << pnr << ":\n";
+	        for (const Ticket& t : allTickets[pnr]) {
+	            cout << "Name: " << t.passengerName
+	                 << ", Age: " << t.age
+	                 << ", Berth: " << t.berthType
+	                 << ", Status: " << t.status;
+	            if (t.status == "Confirmed") {
+	                cout << ", Seat No: " << t.berthNumber;
+	            }
+	            cout << "\n";
+	        }
+	    } else {
+	        cout << "No booking found with PNR " << pnr << ".\n";
+	    }
+	}
 };
 
