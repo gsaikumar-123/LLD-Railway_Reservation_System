@@ -16,3 +16,15 @@ public:
     Berth(int num, string ty, bool aval = true)
         : berthNumber(num), type(ty), isAvailable(aval), passengerName(""), age(0), pnr(0) {}
 };
+
+class Passenger {
+public:
+    string name;
+    int age;
+    string preference;
+
+    Passenger() : name(""), age(0), preference("") {}
+
+    Passenger(string n, int a, string p)
+        : name(n), age(a), preference(p) {}
+};
