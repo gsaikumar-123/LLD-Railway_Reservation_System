@@ -115,5 +115,71 @@ public:
 			tmp.front().print(); tmp.pop(); 
 		}
     }
+
+    void bookTicket(vector<Passenger> group) {
+	    int pnr = nextPNR++;
+	    vector<Ticket> groupTickets;
+	
+	    for (Passenger& p : group) {
+	        string assignedType = "";
+	        int assignedSeat = -1;
+	
+	        if (p.preference != "null" && typeMap[p.preference].empty()) {
+	            cout << "Preferred berth for " << p.name << " not available. Book any available berth? (yes/no): ";
+	            string resp; cin >> resp;
+	            if (resp != "yes") continue;
+	            p.preference = "null";
+	        }
+	
+	        if (p.preference == "null" && p.age >= 60 && !typeMap["LB"].empty()) {
+	            assignedType = "LB";
+	            assignedSeat = *typeMap["LB"].begin();
+	        }
+	        
+	        else if (p.preference != "null" && !typeMap[p.preference].empty()) {
+	            assignedType = p.preference;
+	            assignedSeat = *typeMap[assignedType].begin();
+	        }
+
+	        else {
+	            for (auto& pair : typeMap) {
+	                if (!pair.second.empty()) {
+	                    assignedType = pair.first;
+	                    assignedSeat = *pair.second.begin();
+	                    break;
+	                }
+	            }
+	        }
+	
+	        if (assignedSeat != -1) {
+	            typeMap[assignedType].erase(assignedSeat);
+	            berths[assignedSeat].isAvailable = false;
+	            Ticket t(pnr, "Confirmed", assignedSeat, assignedType, p.age, p.name);
+	            confirmedTickets.push_back(t);
+	            groupTickets.push_back(t);
+	        }
+	        else if (RAC.size() < RAC_LIMIT) {
+	            int racNo = 100 + RAC.size() + 1;
+	            Ticket t(pnr, "RAC", -1, "RAC" + to_string(RAC.size() + 1), p.age, p.name);
+	            RAC.push(t);
+	            groupTickets.push_back(t);
+	        }
+	        else if (WL.size() < WL_LIMIT) {
+	            Ticket t(pnr, "WL", -1, "WL", p.age, p.name);
+	            WL.push(t);
+	            groupTickets.push_back(t);
+	        }
+	        else {
+	            cout << "No seat/RAC/WL available for " << p.name << "." << endl;
+	        }
+	    }
+	
+	    if (!groupTickets.empty()) {
+	        allTickets[pnr] = groupTickets;
+	        cout << "\nBooking done with PNR: " << pnr << " for " << groupTickets.size() << " passenger(s).\n";
+	    } else {
+	        cout << "\nNo tickets could be booked for the group.\n";
+	    }
+	}
 };
 
