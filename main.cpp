@@ -96,5 +96,24 @@ public:
 	        }
 	    }
 	}	
+
+    void printAllTickets() {
+        cout << "PNR\tBerthNo\tStatus\tType\tName\tAge" << endl;
+        
+		for (auto &t : confirmedTickets){
+        	t.print();
+		}
+        queue<Ticket> tmp = RAC;
+        
+		while (!tmp.empty()) { 
+			tmp.front().print(); tmp.pop(); 
+		}
+        
+		tmp = WL;
+        
+		while (!tmp.empty()) { 
+			tmp.front().print(); tmp.pop(); 
+		}
+    }
 };
 
