@@ -181,5 +181,84 @@ public:
 	        cout << "\nNo tickets could be booked for the group.\n";
 	    }
 	}
+
+    void cancelTicket(int pnr) {
+	    bool found = false;
+	
+	    auto it = confirmedTickets.begin();
+	    while (it != confirmedTickets.end()) {
+	        if (it->PNR == pnr) {
+	            found = true;
+	
+	            typeMap[it->berthType].insert(it->berthNumber);
+	            berths[it->berthNumber].isAvailable = true;
+	
+	            if (!RAC.empty()) {
+	                Ticket rac = RAC.front(); RAC.pop();
+	                rac.status = "Confirmed";
+	                rac.berthType = it->berthType;
+	                rac.berthNumber = it->berthNumber;
+	                confirmedTickets.push_back(rac);
+	                allTickets[rac.PNR] = {rac};
+	
+	                if (!WL.empty()) {
+	                    Ticket wl = WL.front(); WL.pop();
+	                    wl.status = "RAC";
+	                    wl.berthType = "RAC" + to_string(RAC.size() + 1);
+	                    RAC.push(wl);
+	                    allTickets[wl.PNR] = {wl};
+	                }
+	            }
+	
+	            it = confirmedTickets.erase(it);
+	        } else {
+	            ++it;
+	        }
+	    }
+	
+	    queue<Ticket> newRAC;
+	    while (!RAC.empty()) {
+	        Ticket t = RAC.front(); RAC.pop();
+	        if (t.PNR == pnr) {
+	            found = true;
+	            if (!WL.empty()) {
+	                Ticket wl = WL.front(); WL.pop();
+	                wl.status = "RAC";
+	                wl.berthType = "RAC" + to_string(RAC.size() + 1);
+	                newRAC.push(wl);
+	                allTickets[wl.PNR] = {wl};
+	            }
+	        } else {
+	            newRAC.push(t);
+	        }
+	    }
+	    RAC = newRAC;
+	
+	    queue<Ticket> newWL;
+	    while (!WL.empty()) {
+	        Ticket t = WL.front(); WL.pop();
+	        if (t.PNR == pnr) {
+	            found = true;
+	        }
+			else {
+	            newWL.push(t);
+	        }
+	    }
+	    WL = newWL;
+	
+	    auto itMap = allTickets.begin();
+	    while (itMap != allTickets.end()) {
+	        if (itMap->first == pnr) {
+	            itMap = allTickets.erase(itMap);
+	        } else {
+	            ++itMap;
+	        }
+	    }
+	
+	    if (!found) {
+	        cout << "PNR not found." << endl;
+	    }
+	}
+
 };
 
