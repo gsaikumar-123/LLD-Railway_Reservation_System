@@ -79,5 +79,22 @@ public:
             berths[100 + i] = Berth(-1, "RAC" + to_string(i));
         }
     }
+
+    void printAllBerths() {
+	    cout << "All Berths Status:\n";
+	    for (const auto& pair : berths) {
+	        const Berth& berth = pair.second;
+	        cout << "Berth No: " << berth.berthNumber << ", Type: " << berth.type << "\n";
+	        
+	        if (!berth.isAvailable) {
+	            cout << "  PNR: " << berth.pnr
+	                 << ", Name: " << berth.passengerName
+	                 << ", Age: " << berth.age << "\n";
+	        }
+			else {
+	            cout << "  Status: Available\n";
+	        }
+	    }
+	}	
 };
 
